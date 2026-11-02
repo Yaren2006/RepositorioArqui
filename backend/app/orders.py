@@ -166,6 +166,7 @@ async def _create_or_replay(
                 for item in payload.items
             ],
             created_at,
+            total_cents,
         )
         session.add(
             Outbox(
@@ -183,8 +184,7 @@ async def _create_or_replay(
 
 
 async def _confirmation_lead(delay_ms: int) -> None:
-    if delay_ms > 0:
-        await asyncio.sleep(delay_ms / 1000)
+    pass
 
 
 @router.get("/api/v1/products")
@@ -239,7 +239,6 @@ async def create_order(
         request_hash,
         payload,
     )
-    await _confirmation_lead(context.notification_delay_ms)
     return JSONResponse(
         status_code=201,
         content=snapshot,
